@@ -143,7 +143,6 @@ const CERTIFICATIONS = [
 
 const STATS = [
   { value: '4+', label: 'Years Experience' },
-  { value: '80M+', label: 'Records Migrated' },
   { value: '75%', label: 'Ops Time Reduced' },
   { value: '6+', label: 'Security Tools Integrated' },
 ];
@@ -233,10 +232,12 @@ function SkillBar({ label, level, color }: { label: string; level: number; color
           style={{
             background: `linear-gradient(90deg, ${color}60, ${color})`,
             boxShadow: hovered ? `0 0 12px ${color}50` : 'none',
+            width: '100%',
+            transformOrigin: 'left',
           }}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${level * 100}%` }}
-          viewport={{ once: true, margin: '-50px' }}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: level }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
@@ -418,7 +419,7 @@ export function ResumeCanvas() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-16"
+        className="grid grid-cols-3 gap-4 mb-16"
       >
         {STATS.map((stat, i) => (
           <GlassCard key={stat.label} className="p-5 text-center">
