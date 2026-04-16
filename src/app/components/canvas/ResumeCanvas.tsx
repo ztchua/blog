@@ -185,7 +185,7 @@ function Avatar() {
         }}
       >
         <img
-          src={new URL('/profile.png', import.meta.env.BASE_URL).href}
+          src={`${import.meta.env.BASE_URL}profile.png`}
           alt={PROFILE.name}
           className="w-full h-full object-cover"
         />
