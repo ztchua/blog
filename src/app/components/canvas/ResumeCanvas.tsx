@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
 import {
   Award,
   MapPin,
@@ -87,48 +87,49 @@ const SKILL_GROUPS = [
 const TIMELINE = [
   {
     year: '2023 — Present',
-    title: 'DevOps Engineer II',
+    title: 'DevOps Engineer (II)',
     company: 'Government Technology Agency',
     highlights: [
-      'Designed centralized CI/CD templates and built robust GitLab CI/CD pipelines across multiple tracks, enabling autonomous configuration of parent-child and multi-project pipelines',
-      'Enforced security and quality of repositories using SAST, Dependency Scanning, DAST, Container Scanning, and SCA via SonarQube',
-      'Redesigned roles and permissions for GitLab groups and projects by revamping paradigm to functional groups',
-      'Enforced container integrity through Cosign for image signing and verification, and Connaisseur for runtime verification via admission webhooks',
-      'Developed and managed AWS cloud infrastructure using IAC; writing custom Terragrunt modules to manage resources via declarative states',
-      'Architected a highly-available intranet-only architecture across multiple VPCs using Transit Gateways with ALBs, NLBs, R53, and EKS Auto Mode',
-      'Built a centralized SIEM and observability platform on the ELK stack \u2014 piping AWS account data via ETLs and Elastic\'s serverless forwarder through bespoke ingestion pipelines',
-      'Configured dashboards, visualizations, and SIEM alerts on Kibana to monitor key metrics and ensure SLIs and SLOs are met',
-      'Automated seamless cluster upgrades and deployments via custom Helm Charts and FluxCD (GitOps), ensuring auditability through declarative manifests',
-      'Orchestrated workloads on EKS Fargate (HPAs, Pod Readiness Gates, Container Lifecycle Hooks) and EKS Auto Mode (Pod Disruption Budgets, Topology Spread Constraints)',
-      'Drove cross-functional DevOps excellence through sharing sessions, documentation, and mentoring other engineers on CI/CD best practices',
-      'Developed utility scripts in Golang and Bash for OIDC user provisioning, Elasticsearch object migration, and automated Kubernetes resource creation',
+      'Designed **centralized CICD templates** and built **robust GitLab CI/CD pipelines** across multiple tracks, allowing the **autonomous configuration** of **parent-child / multi-project pipelines** while streamlining deployment processes',
+      'Enforced **security and quality** of existing repositories by employing tools such as **SAST**, **Dependency Scanning**, **DAST**, **Container Scanning** and **SCA via SonarQube**',
+      '**Redesigned roles and permissions** for existing GitLab groups and projects by **revamping paradigm** to **functional groups**',
+      'Enforced **container integrity** through the designing and use of **Cosign** for **image signing and verification**, and **Connaisseur** for **runtime verification** via **admission webhooks**',
+      'Developed and managed **AWS cloud infrastructure** using **IAC**; writing custom **Terragrunt** modules to manage resources via declarative states',
+      'Architected and implemented a highly-available intranet-only architecture across multiple **VPCs** using **Transit Gateways** with **ALBs** and **NLBs**, **R53** and **EKS Auto Mode**',
+      'Integrated existing AWS account data to be piped to **ELK stack** via ETLs and Elastic\'s **serverless forwarder**, funneling through crafted **bespoke ingestion pipelines** as a **centralized SIEM and observability platform** for multiple tracks to use',
+      'Architectured and configured various **dashboards and visualizations on Kibana** with **observability and SIEM alerts** as a **monitoring avenue** on the **ELK stack** to trigger alerts on key metrics, ensuring that **SLIs** and **SLOs** are timely met',
+      '**Automated seamless upgrades and deployments to the cluster** via custom **Helm Charts** via **FluxCD**, a **GitOps** tool, ensuring **auditability through declarative manifests** and **fast reconciliation** of Kubernetes resources',
+      'Orchestrate and manage workloads on **AWS EKS Fargate** while ensuring **high availability and minimal downtime** through the use of **HPAs**, **Pod Readiness Gates** and **Container Lifecycle Hooks**; and on **AWS EKS Auto Mode** using **Pod Disruption Budgets** and **Topology Spread Constraints**',
+      '**Drove cross-functional DevOps excellence** by guiding engineers on CI/CD best practices and infrastructure knowledge, enabling cross-functional workflows and fostering DevOps maturity across tracks through **sharing sessions and documentation**',
+      '**Lead, guide and mentor** other DevOps engineers on **designing, troubleshooting and writing quality code**',
+      'Developed utility scripts in **Golang** and **Bash** to automate operational tasks ranging from **OIDC user provisioning**, **migration of Elasticsearch objects** to **automated creation of supporting Kubernetes resources**',
     ],
     color: '#ff006e',
     tags: ['Kubernetes', 'AWS', 'CI/CD', 'ELK Stack', 'FluxCD'],
   },
   {
     year: '2021 — 2023',
-    title: 'Associate Software Developer',
+    title: 'Associate Software Developer (I)',
     company: 'S&P Global',
     highlights: [
-      'Contributed features and enhancements with comprehensive test suites using JMockit and Mockito for an existing Spring Boot application',
-      'Single-handedly architected and implemented a decoupled serverless service in Python on AWS using Lambda, S3, and SQS to facilitate forwarding of financial trades',
-      'Implemented automation scripts in Bash, Python, and Golang for development and operational support \u2014 reducing time spent by 75%',
-      'Resolved numerous P1/P2 incidents with in-depth troubleshooting, solutions, and root cause analysis under time-critical deadlines as L2/L3 support',
-      'Developed and enhanced GitLab CI/CD pipelines, adopting a shift-left culture with SCA tools such as Mend and SonarQube',
-      'Authored technical designs and documentation for Day 0 and Day 2 operations for new and existing services',
-      'Participated in Agile development cycles, acting as a rotational Scrum Master for development sprints',
-      'Executed and planned major migrations and exercises for clients with high data loads \u2014 over 80 million records',
+      'Contributor in delivery team providing features and enhancements with comprehensive test suites using **Jmockit** and **Mockito** for existing **Spring Boot** application',
+      'Single-handedly architectured and implemented a decoupled **serverless** service in **Python** on **AWS** using services such as **Lambda**, **S3** and **SQS** to facilitate forwarding of financial trades',
+      'Implemented scripts and automations for internal operations in **Bash**, **Python** and **Golang** for development and daily operational support use cases, reducing **time spent by 75%**',
+      'Reconnaissance numerous P1/2 incidents and provided **in-depth troubleshooting**, **solutions** and **root cause analysis under time-critical deadlines** as part of the **support team as a L2/L3**',
+      'Developed and enhanced existing **GitLab CI/CD pipelines** to streamline delivery and deployment process, adopting a shift-left culture with SCA tools such as **Mend** and **SonarQube**',
+      'Authored **technical designs** and **documentations** for **Day 0 and Day 2 operations** for new and existing services',
+      'Participated in **Agile** development cycles, acting as a rotational **Scrum Master** for development sprints',
+      'Executed and planned major migration and exercises for clients with high data loads (**over 80 million records**)',
     ],
     color: '#ffbe0b',
     tags: ['Spring Boot', 'Python', 'AWS Lambda', 'GitLab CI/CD'],
   },
   {
     year: '2019 — 2021',
-    title: 'BS Computer Science, Big Data',
+    title: 'BS in Computer Science, Big Data',
     company: 'University of Wollongong',
     highlights: [
-      'Graduated with Distinction in Computer Science with a specialization in Big Data',
+      'Grade: Distinction',
     ],
     color: '#8b5cf6',
     tags: ['Computer Science', 'Big Data'],
@@ -194,10 +195,28 @@ function Avatar() {
 }
 
 /* ═══════════════════════════════════════════
+   HIGHLIGHT RENDERER
+   ═══════════════════════════════════════════ */
+
+function renderHighlight(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <strong key={i} style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part ? <span key={i}>{part}</span> : null;
+  });
+}
+
+/* ═══════════════════════════════════════════
    SKILL BAR
    ═══════════════════════════════════════════ */
 
-function SkillBar({ label, level, color }: { label: string; level: number; color: string }) {
+function SkillBar({ label, level, color, inView }: { label: string; level: number; color: string; inView: boolean }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -236,8 +255,7 @@ function SkillBar({ label, level, color }: { label: string; level: number; color
             transformOrigin: 'left',
           }}
           initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: level }}
-          viewport={{ once: true }}
+          animate={inView ? { scaleX: level } : { scaleX: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
@@ -271,6 +289,56 @@ function GlassCard({
     >
       {children}
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   SKILL GROUP CARD
+   ═══════════════════════════════════════════ */
+
+function SkillGroupCard({ group, index }: { group: typeof SKILL_GROUPS[number]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      transition={{ delay: index * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <GlassCard className="p-5">
+        <div className="flex items-center gap-2 mb-5">
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{
+              background: group.color,
+              boxShadow: `0 0 8px ${group.color}50`,
+            }}
+          />
+          <span
+            className="text-[12px] font-semibold uppercase tracking-wider"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              color: group.color,
+            }}
+          >
+            {group.category}
+          </span>
+        </div>
+        <div className="space-y-3.5">
+          {group.skills.map((skill) => (
+            <SkillBar
+              key={skill.label}
+              label={skill.label}
+              level={skill.level}
+              color={group.color}
+              inView={inView}
+            />
+          ))}
+        </div>
+      </GlassCard>
+    </motion.div>
   );
 }
 
@@ -481,44 +549,7 @@ export function ResumeCanvas() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {SKILL_GROUPS.map((group, gi) => (
-            <motion.div
-              key={group.category}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: gi * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <GlassCard className="p-5">
-                <div className="flex items-center gap-2 mb-5">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{
-                      background: group.color,
-                      boxShadow: `0 0 8px ${group.color}50`,
-                    }}
-                  />
-                  <span
-                    className="text-[12px] font-semibold uppercase tracking-wider"
-                    style={{
-                      fontFamily: 'var(--font-mono)',
-                      color: group.color,
-                    }}
-                  >
-                    {group.category}
-                  </span>
-                </div>
-                <div className="space-y-3.5">
-                  {group.skills.map((skill) => (
-                    <SkillBar
-                      key={skill.label}
-                      label={skill.label}
-                      level={skill.level}
-                      color={group.color}
-                    />
-                  ))}
-                </div>
-              </GlassCard>
-            </motion.div>
+            <SkillGroupCard key={group.category} group={group} index={gi} />
           ))}
         </div>
       </motion.section>
@@ -707,7 +738,7 @@ export function ResumeCanvas() {
                                     className="shrink-0 mt-[7px] w-1 h-1 rounded-full"
                                     style={{ background: entry.color, opacity: 0.6 }}
                                   />
-                                  <span>{h}</span>
+                                  <span>{renderHighlight(h)}</span>
                                 </li>
                               ))}
                             </ul>

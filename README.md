@@ -1,18 +1,18 @@
-# ZT.DEV
+# ZHENGTAT.COM
 
 A hyper-modern personal platform that unifies a profile/resume landing page, a micro-blog feed, and a long-form technical publication — all wrapped in an obsidian dark-mode aesthetic with pan-chromatic fluid mesh gradients.
 
-Built with React 18, Vite, Tailwind CSS v4, and Motion (Framer Motion).
+Built with React 18, Vite, Tailwind CSS v4, and Motion (Framer Motion). Deployed to GitHub Pages at [zhengtat.com](https://zhengtat.com) via Cloudflare CNAME.
 
 ## Sections
 
-### The Architecture
-A scrollable profile landing page with animated avatar ring, stats, grouped skill bars, expandable career timeline, and certification cards.
+### Bloke
+A scrollable profile landing page with photo avatar, stats, grouped skill bars, expandable career timeline with detailed highlights, and certification cards.
 
-### The Pulse
+### Tweets *(coming soon)*
 A masonry-style micro-blog feed with glassmorphic cards, tag filtering, and confetti particle bursts on likes. Posts are loaded from markdown files.
 
-### The Lab
+### Nerd-talk *(coming soon)*
 A distraction-free technical article reader with custom Go syntax highlighting, Ghostty-inspired terminal code blocks with animated copy-to-clipboard, and a scroll-tracked table of contents. Articles are loaded from markdown files.
 
 ## Getting Started
@@ -94,7 +94,7 @@ The `{#id}` on headings powers the table of contents. The `lang:filename` syntax
 | Animation | Motion (Framer Motion v12), canvas-confetti |
 | Icons | Lucide React |
 | UI Primitives | Radix UI (shadcn/ui) |
-| Fonts | Syne, Plus Jakarta Sans, JetBrains Mono |
+| Fonts | Space Grotesk, Plus Jakarta Sans, JetBrains Mono |
 
 ## Design
 

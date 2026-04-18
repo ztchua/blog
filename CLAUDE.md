@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A hyper-modern personal platform built with React 18 + Vite + Tailwind CSS v4. Three sections: **The Architecture** (profile/resume landing page), **The Pulse** (micro-blog feed), and **The Lab** (long-form technical articles). Dark-mode obsidian aesthetic with pan-chromatic mesh gradient background.
+A hyper-modern personal platform built with React 18 + Vite + Tailwind CSS v4. Three sections: **Bloke** (profile/resume landing page), **Tweets** (micro-blog feed, currently disabled), and **Nerd-talk** (long-form technical articles, currently disabled). Dark-mode obsidian aesthetic with pan-chromatic mesh gradient background. Deployed to GitHub Pages at **zhengtat.com** via Cloudflare CNAME.
 
 ## Tech Stack
 
@@ -11,7 +11,7 @@ A hyper-modern personal platform built with React 18 + Vite + Tailwind CSS v4. T
 - **Animation**: `motion` (Framer Motion v12) for layout/scroll/enter-exit animations, `canvas-confetti` for particle bursts
 - **Icons**: `lucide-react`
 - **UI Primitives**: Radix UI (shadcn/ui components in `src/app/components/ui/`)
-- **Fonts**: Syne (display), Plus Jakarta Sans (body), JetBrains Mono (code) — loaded via Google Fonts
+- **Fonts**: Space Grotesk (display), Plus Jakarta Sans (body), JetBrains Mono (code) — loaded via Google Fonts
 
 ## Architecture
 
@@ -77,11 +77,11 @@ The `{#id}` syntax on headings sets the section ID for the table of contents. Th
 | File | Role |
 |------|------|
 | `src/app/App.tsx` | Shell: mesh gradient, noise overlay, nav, AnimatePresence section switching |
-| `src/app/components/Navigation.tsx` | Floating glassmorphic nav bar with spring-animated indicator |
+| `src/app/components/Navigation.tsx` | Floating glassmorphic nav bar with spring-animated indicator, Tweets/Nerd-talk disabled |
 | `src/app/components/MeshGradient.tsx` | Canvas-based animated background (7 blobs, Lissajous curves, 20% res, screen blend) |
 | `src/app/components/pulse/PulseFeed.tsx` | Masonry feed, tag filtering, confetti on like |
 | `src/app/components/lab/LabReader.tsx` | Article reader, custom Go tokenizer/highlighter, Ghostty-style code blocks, scroll-tracked TOC |
-| `src/app/components/canvas/ResumeCanvas.tsx` | Profile hero + stats + skill bars + career timeline + certifications |
+| `src/app/components/canvas/ResumeCanvas.tsx` | Profile hero (photo from `public/profile.png`) + stats + skill bars (scaleX animation) + career timeline (expandable highlights) + certifications |
 
 ### Unused Components
 
@@ -120,4 +120,9 @@ pnpm build        # Production build
 - `react-dnd` is installed but not currently used in any active component
 - The `@/` path alias maps to `./src`
 - The Vite config includes a `figmaAssetResolver` plugin — legacy from the original template, safe to ignore
-- Profile avatar in `ResumeCanvas.tsx` shows initials. To use a real photo, replace the initials `<div>` inside the `Avatar` function with an `<img>` tag (comment in code shows where)
+- Profile avatar in `ResumeCanvas.tsx` uses `<img src="/profile.png">` — the photo lives in `public/profile.png`
+- Tweets and Nerd-talk sections are disabled in `Navigation.tsx` via `disabled: true` on their section config entries
+- Skill bars use `scaleX` transform (not `width` percentage) for reliable rendering on mobile
+- Career timeline highlights are stored as string arrays (`entry.highlights`) and rendered as bullet lists when expanded
+- Site is served from root (no base path) — a `CNAME` file in `public/` maps to `zhengtat.com`
+- GitHub Actions workflow at `.github/workflows/deploy.yml` auto-deploys to GitHub Pages on push to `main`
