@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-A hyper-modern personal platform built with React 18 + Vite + Tailwind CSS v4. Three sections: **Bloke** (profile/resume landing page), **Tweets** (micro-blog feed, currently disabled), and **Nerd-talk** (long-form technical articles, currently disabled). Dark-mode obsidian aesthetic with pan-chromatic mesh gradient background. Deployed to GitHub Pages at **zhengtat.com** via Cloudflare CNAME.
+A hyper-modern personal platform built with React 18 + Vite + Tailwind CSS v4. Three sections: **Bloke** (profile/resume landing page), **Tweets** (micro-blog feed, currently disabled), and **Nerd-talk** (long-form technical articles). Dark-mode obsidian aesthetic with pan-chromatic mesh gradient background. Deployed to GitHub Pages at **zhengtat.com** via Cloudflare CNAME.
 
 ## Tech Stack
 
@@ -77,10 +77,10 @@ The `{#id}` syntax on headings sets the section ID for the table of contents. Th
 | File | Role |
 |------|------|
 | `src/app/App.tsx` | Shell: mesh gradient, noise overlay, nav, AnimatePresence section switching |
-| `src/app/components/Navigation.tsx` | Floating glassmorphic nav bar with spring-animated indicator, Tweets/Nerd-talk disabled |
+| `src/app/components/Navigation.tsx` | Floating glassmorphic nav bar with spring-animated indicator, Tweets disabled |
 | `src/app/components/MeshGradient.tsx` | Canvas-based animated background (7 blobs, Lissajous curves, 20% res, screen blend) |
 | `src/app/components/pulse/PulseFeed.tsx` | Masonry feed, tag filtering, confetti on like |
-| `src/app/components/lab/LabReader.tsx` | Article reader, custom Go tokenizer/highlighter, Ghostty-style code blocks, scroll-tracked TOC |
+| `src/app/components/lab/LabReader.tsx` | Article index + reader, inline markdown renderer (bold/italic/links/code/blockquotes/lists/sub-headers), custom Go tokenizer/highlighter, Ghostty-style code blocks, scroll-tracked TOC with h2/h3 support |
 | `src/app/components/canvas/ResumeCanvas.tsx` | Profile hero (photo from `public/profile.png`) + stats + skill bars (scaleX animation) + career timeline (expandable highlights) + certifications |
 
 ### Unused Components

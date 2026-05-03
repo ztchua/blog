@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { Copy, Check, Clock, ArrowLeft, ChevronRight } from 'lucide-react';
-import { loadLabArticles, type LabArticle } from '../../../content/loader';
+import { loadLabArticles, type LabArticle, type LabHeading } from '../../../content/loader';
 
 /* ═══════════════════════════════════════════
    SYNTAX HIGHLIGHTING
@@ -21,6 +22,34 @@ const GO_TYPES = new Set([
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function parseInlineMarkdown(text: string): string {
+  let html = text.replace(/!\[\[.*?\]\]/g, '');
+  html = escapeHtml(html);
+  html = html.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#00d4ff;text-decoration:underline;text-underline-offset:2px">$1</a>',
+  );
+  html = html.replace(
+    /(^|[\s(])(https?:\/\/[^\s<]+)/gm,
+    '$1<a href="$2" target="_blank" rel="noopener noreferrer" style="color:rgba(0,212,255,0.7);text-decoration:underline;text-underline-offset:2px">$2</a>',
+  );
+  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong style="color:#f0f0f5"><em>$1</em></strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong style="color:#f0f0f5">$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  html = html.replace(
+    /`([^`]+)`/g,
+    '<code style="font-family:var(--font-mono);background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px;font-size:0.9em;color:#f8f8f2">$1</code>',
+  );
+  return html;
+}
+
+function parseHeadingId(raw: string): { title: string; id: string } {
+  const m = raw.match(/^(.+?)\s*\{#(\w+)\}$/);
+  const title = (m ? m[1] : raw).trim();
+  const id = m ? m[2] : title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  return { title, id };
 }
 
 function highlightGo(code: string): string {
@@ -222,11 +251,12 @@ function CodeBlock({ code, filename, language }: { code: string; filename: strin
 interface TocItem {
   id: string;
   label: string;
+  level: number;
 }
 
-function TableOfContents({ items, activeId }: { items: TocItem[]; activeId: string }) {
+function TableOfContents({ items, activeId, onSelect }: { items: TocItem[]; activeId: string; onSelect: (id: string) => void }) {
   return (
-    <nav className="hidden xl:block fixed left-[max(2rem,calc((100vw-48rem)/2-16rem))] top-32 w-56">
+    <nav className="hidden xl:block fixed left-[max(2rem,calc((100vw-48rem)/2-16rem))] top-32 w-56 z-30">
       <div
         className="text-[11px] uppercase tracking-widest mb-4"
         style={{ fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.2)' }}
@@ -240,14 +270,23 @@ function TableOfContents({ items, activeId }: { items: TocItem[]; activeId: stri
             href={`#${item.id}`}
             onClick={(e) => {
               e.preventDefault();
+              onSelect(item.id);
               document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="block py-1.5 transition-all duration-300 relative"
+            className="block py-1.5 px-3 -mx-1 rounded-md transition-all duration-300 relative"
             style={{
-              paddingLeft: '12px',
+              paddingLeft: item.level === 3 ? '24px' : undefined,
               fontFamily: 'var(--font-body)',
-              fontSize: '12px',
+              fontSize: item.level === 3 ? '11px' : '12px',
               color: activeId === item.id ? '#00d4ff' : 'rgba(255,255,255,0.3)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0,212,255,0.06)';
+              if (activeId !== item.id) e.currentTarget.style.color = 'rgba(0,212,255,0.7)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              if (activeId !== item.id) e.currentTarget.style.color = 'rgba(255,255,255,0.3)';
             }}
           >
             {activeId === item.id && (
@@ -274,47 +313,107 @@ function TableOfContents({ items, activeId }: { items: TocItem[]; activeId: stri
    ═══════════════════════════════════════════ */
 
 const ARTICLES = loadLabArticles();
-const ARTICLE: LabArticle | undefined = ARTICLES[0];
 
 /* ═══════════════════════════════════════════
-   LAB READER
+   SECTION CONTENT RENDERER
    ═══════════════════════════════════════════ */
 
-export function LabReader() {
-  const [activeHeading, setActiveHeading] = useState('');
-  const contentRef = useRef<HTMLDivElement>(null);
+function SectionContent({ content }: { content: string }) {
+  const lines = content.split('\n');
+  const elements: JSX.Element[] = [];
+  let i = 0;
+  let key = 0;
 
-  // Reading progress
-  const { scrollYProgress } = useScroll();
-  const progress = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.trim() === '') { i++; continue; }
 
-  const article = ARTICLE;
+    // Sub-header: ### text
+    if (line.startsWith('### ')) {
+      const { title, id } = parseHeadingId(line.slice(4));
+      elements.push(
+        <h3 key={key++} id={id} className="text-lg sm:text-xl mb-3 mt-8" style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 600,
+          letterSpacing: '-0.01em',
+          color: 'rgba(255,255,255,0.85)',
+          scrollMarginTop: '80px',
+        }}>
+          <span dangerouslySetInnerHTML={{ __html: parseInlineMarkdown(title) }} />
+        </h3>,
+      );
+      i++;
+      continue;
+    }
 
-  // Intersection observer for TOC tracking
-  useEffect(() => {
-    if (!article) return;
-    setActiveHeading(article.sections[0]?.id || '');
+    // Blockquote: > lines
+    if (line.startsWith('>')) {
+      const quoteLines: string[] = [];
+      while (i < lines.length && lines[i] !== undefined && (lines[i].startsWith('>') || lines[i].trim() === '')) {
+        if (lines[i].startsWith('>')) quoteLines.push(lines[i].replace(/^>\s?/, ''));
+        i++;
+      }
+      elements.push(
+        <blockquote key={key++} className="mb-5 pl-4 py-1" style={{
+          borderLeft: '2px solid rgba(0,212,255,0.2)',
+          color: 'rgba(255,255,255,0.45)',
+          fontStyle: 'italic',
+        }}>
+          <span dangerouslySetInnerHTML={{ __html: parseInlineMarkdown(quoteLines.join(' ')) }} />
+        </blockquote>,
+      );
+      continue;
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveHeading(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: '-15% 0px -75% 0px' }
-    );
+    // List: - or • items (possibly indented)
+    if (/^\s*[-•]\s/.test(line)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\s*[-•]\s/.test(lines[i])) {
+        items.push(lines[i].trim().replace(/^[-•]\s/, ''));
+        i++;
+      }
+      elements.push(
+        <ul key={key++} className="space-y-2 mb-6">
+          {items.map((item, ii) => (
+            <li key={ii} className="flex items-start gap-3 text-[14px] leading-[1.75]"
+              style={{ color: 'rgba(255,255,255,0.65)' }}>
+              <span className="mt-2.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{
+                background: '#00d4ff',
+                boxShadow: '0 0 8px rgba(0,212,255,0.3)',
+              }} />
+              <span dangerouslySetInnerHTML={{ __html: parseInlineMarkdown(item) }} />
+            </li>
+          ))}
+        </ul>,
+      );
+      continue;
+    }
 
-    article.sections.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
+    // Paragraph: collect non-special lines
+    const paraLines: string[] = [];
+    while (i < lines.length && lines[i].trim() !== '' && !lines[i].startsWith('### ') && !lines[i].startsWith('>') && !/^\s*[-•]\s/.test(lines[i])) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.length > 0) {
+      elements.push(
+        <p key={key++} className="text-[14px] sm:text-[15px] leading-[1.8] mb-5"
+          style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <span dangerouslySetInnerHTML={{ __html: parseInlineMarkdown(paraLines.join(' ')) }} />
+        </p>,
+      );
+    }
+  }
 
-    return () => observer.disconnect();
-  }, [article]);
+  return <>{elements}</>;
+}
 
-  if (!article) {
+/* ═══════════════════════════════════════════
+   ARTICLE INDEX
+   ═══════════════════════════════════════════ */
+
+function ArticleIndex({ onSelect }: { onSelect: (slug: string) => void }) {
+  if (ARTICLES.length === 0) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto pt-20 text-center">
         <p style={{ color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)' }}>
@@ -324,14 +423,147 @@ export function LabReader() {
     );
   }
 
-  const tocItems: TocItem[] = article.sections.map((s) => ({
-    id: s.id,
-    label: s.title,
+  return (
+    <div className="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto pt-8">
+      <div>
+        <div className="mb-8">
+          <h1
+            className="text-2xl sm:text-3xl mb-2"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              letterSpacing: '-0.02em',
+            }}
+          >
+            Nerd-talk
+          </h1>
+          <p className="text-[14px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Long-form technical deep dives and systems engineering writeups.
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          {ARTICLES.map((article, i) => (
+            <motion.button
+              key={article.slug}
+              onClick={() => onSelect(article.slug)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: i * 0.03, duration: 0.2 }}
+              className="w-full text-left rounded-xl p-5 transition-all duration-300 group"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.05)',
+              }}
+              whileHover={{
+                background: 'rgba(0,212,255,0.04)',
+                borderColor: 'rgba(0,212,255,0.15)',
+              }}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span
+                      className="text-[11px] px-2 py-0.5 rounded-md"
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        color: '#00d4ff',
+                        background: 'rgba(0,212,255,0.08)',
+                        border: '1px solid rgba(0,212,255,0.12)',
+                      }}
+                    >
+                      {article.series}
+                    </span>
+                    <span
+                      className="text-[11px]"
+                      style={{ fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.2)' }}
+                    >
+                      {article.date}
+                    </span>
+                  </div>
+                  <h2
+                    className="text-base sm:text-lg mb-1 leading-tight"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 700,
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {article.title}
+                  </h2>
+                  <p className="text-[13px] leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    {article.subtitle}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 mt-1 flex-shrink-0">
+                  <span className="text-[11px]" style={{ fontFamily: 'var(--font-mono)', color: 'rgba(255,255,255,0.2)' }}>
+                    {article.readTime}
+                  </span>
+                  <ChevronRight
+                    size={14}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5"
+                    style={{ color: 'rgba(255,255,255,0.15)' }}
+                  />
+                </div>
+              </div>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   ARTICLE READER
+   ═══════════════════════════════════════════ */
+
+function ArticleReader({ article, onBack }: { article: LabArticle; onBack: () => void }) {
+  const [activeHeading, setActiveHeading] = useState('');
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isManualScrollRef = useRef(false);
+  const { scrollYProgress } = useScroll();
+  const progress = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+
+  const handleTocSelect = useCallback((id: string) => {
+    setActiveHeading(id);
+    isManualScrollRef.current = true;
+    setTimeout(() => { isManualScrollRef.current = false; }, 1000);
+  }, []);
+
+  useEffect(() => {
+    setActiveHeading(article.headings[0]?.id || '');
+    window.scrollTo({ top: 0 });
+
+    const SCROLL_OFFSET = 100;
+
+    const handleScroll = () => {
+      if (isManualScrollRef.current) return;
+
+      let activeId = article.headings[0]?.id || '';
+      for (const h of article.headings) {
+        const el = document.getElementById(h.id);
+        if (el && el.getBoundingClientRect().top <= SCROLL_OFFSET) {
+          activeId = h.id;
+        }
+      }
+      setActiveHeading(activeId);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [article]);
+
+  const tocItems: TocItem[] = article.headings.map((h) => ({
+    id: h.id,
+    label: h.title,
+    level: h.level,
   }));
 
   return (
     <>
-      {/* Reading progress bar */}
       <motion.div
         className="fixed top-0 left-0 h-[2px] z-50"
         style={{
@@ -341,17 +573,16 @@ export function LabReader() {
         }}
       />
 
-      <div ref={contentRef} className="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-        {/* Article hero */}
+      <div ref={contentRef} className="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto pt-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-16 pt-4"
         >
-          {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-6" style={{ fontFamily: 'var(--font-mono)' }}>
             <button
+              onClick={onBack}
               className="flex items-center gap-1 text-[11px] transition-colors duration-200"
               style={{ color: 'rgba(255,255,255,0.3)' }}
             >
@@ -388,7 +619,6 @@ export function LabReader() {
             </span>
           </div>
 
-          {/* Divider */}
           <div
             className="mt-8 h-[1px]"
             style={{
@@ -397,7 +627,6 @@ export function LabReader() {
           />
         </motion.div>
 
-        {/* Article body */}
         <article>
           {article.sections.map((section, i) => (
             <motion.section
@@ -407,6 +636,7 @@ export function LabReader() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="mb-12"
+              style={{ scrollMarginTop: '80px' }}
             >
               <h2
                 className="text-xl sm:text-2xl mb-4"
@@ -419,40 +649,7 @@ export function LabReader() {
                 {section.title}
               </h2>
 
-              {section.content.split('\n\n').map((paragraph, pi) => {
-                if (paragraph.startsWith('•')) {
-                  const items = paragraph.split('\n').filter(Boolean);
-                  return (
-                    <ul key={pi} className="space-y-2 mb-6">
-                      {items.map((item, ii) => (
-                        <li
-                          key={ii}
-                          className="flex items-start gap-3 text-[14px] leading-[1.75]"
-                          style={{ color: 'rgba(255,255,255,0.65)' }}
-                        >
-                          <span className="mt-2.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{
-                            background: '#00d4ff',
-                            boxShadow: '0 0 8px rgba(0,212,255,0.3)',
-                          }} />
-                          <span dangerouslySetInnerHTML={{
-                            __html: item.replace(/^• /, '').replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f0f0f5">$1</strong>')
-                          }} />
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-
-                return (
-                  <p
-                    key={pi}
-                    className="text-[14px] sm:text-[15px] leading-[1.8] mb-5"
-                    style={{ color: 'rgba(255,255,255,0.6)' }}
-                  >
-                    {paragraph}
-                  </p>
-                );
-              })}
+              <SectionContent content={section.content} />
 
               {section.code && (
                 <CodeBlock
@@ -465,7 +662,6 @@ export function LabReader() {
           ))}
         </article>
 
-        {/* Article footer */}
         <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
@@ -488,8 +684,30 @@ export function LabReader() {
         </div>
       </div>
 
-      {/* Table of contents */}
-      <TableOfContents items={tocItems} activeId={activeHeading} />
+      {createPortal(<TableOfContents items={tocItems} activeId={activeHeading} onSelect={handleTocSelect} />, document.body)}
     </>
   );
+}
+
+/* ═══════════════════════════════════════════
+   LAB READER (EXPORT)
+   ═══════════════════════════════════════════ */
+
+export function LabReader() {
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+
+  const selectedArticle = selectedSlug
+    ? ARTICLES.find((a) => a.slug === selectedSlug)
+    : null;
+
+  if (selectedArticle) {
+    return (
+      <ArticleReader
+        article={selectedArticle}
+        onBack={() => setSelectedSlug(null)}
+      />
+    );
+  }
+
+  return <ArticleIndex onSelect={setSelectedSlug} />;
 }

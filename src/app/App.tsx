@@ -46,15 +46,15 @@ export default function App() {
       <Navigation activeSection={activeSection} onSectionChange={setActiveSection} />
 
       {/* Content */}
-      <main className="relative z-10 pt-24 pb-16">
+      <main className="relative z-10 pb-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSection}
-            initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -16, filter: 'blur(4px)' }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
             transition={{
-              duration: 0.5,
+              duration: 0.25,
               ease: [0.16, 1, 0.3, 1],
             }}
           >

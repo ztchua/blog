@@ -19,6 +19,12 @@ export interface LabSection {
   code?: { filename: string; language: string; snippet: string };
 }
 
+export interface LabHeading {
+  id: string;
+  title: string;
+  level: number;
+}
+
 export interface LabArticle {
   slug: string;
   title: string;
@@ -27,6 +33,7 @@ export interface LabArticle {
   readTime: string;
   series: string;
   sections: LabSection[];
+  headings: LabHeading[];
 }
 
 /* ═══════════════════════════════════════════
@@ -157,6 +164,25 @@ function parseLabSections(body: string): LabSection[] {
 }
 
 /* ═══════════════════════════════════════════
+   HEADING EXTRACTOR
+   ═══════════════════════════════════════════ */
+
+function extractHeadings(body: string): LabHeading[] {
+  const headings: LabHeading[] = [];
+  const re = /^(#{2,})\s+(.+)$/gm;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    const level = m[1].length;
+    const raw = m[2];
+    const idM = raw.match(/^(.+?)\s*\{#(\w+)\}$/);
+    const title = (idM ? idM[1] : raw).trim();
+    const id = idM ? idM[2] : title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    headings.push({ id, title, level });
+  }
+  return headings;
+}
+
+/* ═══════════════════════════════════════════
    GLOB IMPORTS
    ═══════════════════════════════════════════ */
 
@@ -210,6 +236,7 @@ export function loadLabArticles(): LabArticle[] {
       readTime: meta.readTime || '',
       series: meta.series || '',
       sections: parseLabSections(body),
+      headings: extractHeadings(body),
     };
   });
 

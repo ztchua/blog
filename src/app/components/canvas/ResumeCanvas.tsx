@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { motion, AnimatePresence, useInView } from 'motion/react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Award,
   MapPin,
@@ -18,10 +18,10 @@ const PROFILE = {
   handle: '@zhengtat',
   title: 'DevOps Engineer II',
   location: 'Singapore',
-  bio: 'DevOps engineer with 4 years of experience in software engineering, focused on building and maintaining reliable CI/CD and infrastructure. Proficient in orchestrating Kubernetes clusters and observability stacks, fluent with Linux system administration and L2/3 tech operations. Passionate about FOSS and learning technologies to make a difference in everyday life.',
+  bio: 'DevOps engineer with 5 years of experience in software engineering, experienced in building and maintaining robust CI/CD and infrastructure. Proficient in cluster orchestration and observability stacks, is fluent with Linux system administration and L2/3 tech operations. Has a knack for troubleshooting and breaking down problems. Passionate about learning technologies to make a difference in everyday life — embraces the FOSS concept and is proficient in Japanese.',
   status: 'Open to opportunities',
   links: [
-    { label: 'GitHub', href: 'https://github.com/ztcjoe93', icon: 'gh' },
+    { label: 'GitHub', href: 'https://github.com/ztchua', icon: 'gh' },
     { label: 'LinkedIn', href: 'https://linkedin.com/in/zhengtat', icon: 'li' },
     { label: 'Email', href: 'mailto:zhengtat@gmail.com', icon: 'tw' },
   ],
@@ -31,56 +31,27 @@ const SKILL_GROUPS = [
   {
     category: 'Languages',
     color: '#00d4ff',
-    skills: [
-      { label: 'HCL / Terraform', level: 0.92 },
-      { label: 'Golang', level: 0.85 },
-      { label: 'Python', level: 0.88 },
-      { label: 'Bash / Shell', level: 0.9 },
-      { label: 'Java', level: 0.8 },
-      { label: 'SQL', level: 0.82 },
-    ],
+    skills: ['HCL / Terraform', 'Golang', 'Python', 'Bash / Shell', 'Java', 'SQL'],
   },
   {
     category: 'Infrastructure',
     color: '#ffbe0b',
-    skills: [
-      { label: 'Kubernetes', level: 0.95 },
-      { label: 'Docker', level: 0.92 },
-      { label: 'AWS', level: 0.9 },
-      { label: 'FluxCD / Helm', level: 0.88 },
-      { label: 'Terragrunt', level: 0.88 },
-    ],
+    skills: ['Kubernetes', 'Docker', 'AWS', 'FluxCD / Helm', 'Terragrunt'],
   },
   {
     category: 'Observability & Security',
     color: '#8b5cf6',
-    skills: [
-      { label: 'Elasticsearch / ELK', level: 0.88 },
-      { label: 'Grafana', level: 0.85 },
-      { label: 'SonarQube', level: 0.82 },
-      { label: 'Cosign / Connaisseur', level: 0.78 },
-      { label: 'Zabbix', level: 0.75 },
-    ],
+    skills: ['Elasticsearch / ELK', 'Grafana', 'SonarQube', 'Cosign / Connaisseur', 'Zabbix'],
   },
   {
     category: 'CI/CD & GitOps',
     color: '#ff006e',
-    skills: [
-      { label: 'GitLab CI/CD', level: 0.93 },
-      { label: 'GitHub Actions', level: 0.85 },
-      { label: 'GitOps / FluxCD', level: 0.9 },
-      { label: 'SAST / DAST / SCA', level: 0.85 },
-    ],
+    skills: ['GitLab CI/CD', 'GitHub Actions', 'GitOps / FluxCD', 'SAST / DAST / SCA'],
   },
   {
     category: 'Frameworks & Tools',
     color: '#3a86ff',
-    skills: [
-      { label: 'Spring Boot', level: 0.78 },
-      { label: 'Flutter / Dart', level: 0.72 },
-      { label: 'Vim / Tmux', level: 0.88 },
-      { label: 'Proxmox', level: 0.75 },
-    ],
+    skills: ['Spring Boot', 'Flutter / Dart', 'Vim / Tmux', 'Proxmox'],
   },
 ];
 
@@ -92,17 +63,17 @@ const TIMELINE = [
     highlights: [
       'Designed **centralized CICD templates** and built **robust GitLab CI/CD pipelines** across multiple tracks, allowing the **autonomous configuration** of **parent-child / multi-project pipelines** while streamlining deployment processes',
       'Enforced **security and quality** of existing repositories by employing tools such as **SAST**, **Dependency Scanning**, **DAST**, **Container Scanning** and **SCA via SonarQube**',
-      '**Redesigned roles and permissions** for existing GitLab groups and projects by **revamping paradigm** to **functional groups**',
+      '**Redesigned roles and permissions** for existing GitLab groups and projects by **revamping paradigm** from project-based groups to **functional groups**',
       'Enforced **container integrity** through the designing and use of **Cosign** for **image signing and verification**, and **Connaisseur** for **runtime verification** via **admission webhooks**',
       'Developed and managed **AWS cloud infrastructure** using **IAC**; writing custom **Terragrunt** modules to manage resources via declarative states',
-      'Architected and implemented a highly-available intranet-only architecture across multiple **VPCs** using **Transit Gateways** with **ALBs** and **NLBs**, **R53** and **EKS Auto Mode**',
+      'Architected and implemented a **bespoke hub-and-spoke architecture** to cater for both internet and intranet services; across multiple **VPCs** using **Transit Gateways** with **ALBs** and **NLBs**, **R53** and **EKS Auto Mode**',
       'Integrated existing AWS account data to be piped to **ELK stack** via ETLs and Elastic\'s **serverless forwarder**, funneling through crafted **bespoke ingestion pipelines** as a **centralized SIEM and observability platform** for multiple tracks to use',
       'Architectured and configured various **dashboards and visualizations on Kibana** with **observability and SIEM alerts** as a **monitoring avenue** on the **ELK stack** to trigger alerts on key metrics, ensuring that **SLIs** and **SLOs** are timely met',
       '**Automated seamless upgrades and deployments to the cluster** via custom **Helm Charts** via **FluxCD**, a **GitOps** tool, ensuring **auditability through declarative manifests** and **fast reconciliation** of Kubernetes resources',
       'Orchestrate and manage workloads on **AWS EKS Fargate** while ensuring **high availability and minimal downtime** through the use of **HPAs**, **Pod Readiness Gates** and **Container Lifecycle Hooks**; and on **AWS EKS Auto Mode** using **Pod Disruption Budgets** and **Topology Spread Constraints**',
       '**Drove cross-functional DevOps excellence** by guiding engineers on CI/CD best practices and infrastructure knowledge, enabling cross-functional workflows and fostering DevOps maturity across tracks through **sharing sessions and documentation**',
       '**Lead, guide and mentor** other DevOps engineers on **designing, troubleshooting and writing quality code**',
-      'Developed utility scripts in **Golang** and **Bash** to automate operational tasks ranging from **OIDC user provisioning**, **migration of Elasticsearch objects** to **automated creation of supporting Kubernetes resources**',
+      'Developed utility scripts in **Golang** and **Bash** to automate operational tasks ranging from **internal compliance reporting**, **migration of Elasticsearch objects** to **automated creation of supporting Kubernetes resources**',
     ],
     color: '#ff006e',
     tags: ['Kubernetes', 'AWS', 'CI/CD', 'ELK Stack', 'FluxCD'],
@@ -143,7 +114,7 @@ const CERTIFICATIONS = [
 ];
 
 const STATS = [
-  { value: '4+', label: 'Years Experience' },
+  { value: '5+', label: 'Years Experience' },
   { value: '75%', label: 'Ops Time Reduced' },
   { value: '6+', label: 'Security Tools Integrated' },
 ];
@@ -213,57 +184,6 @@ function renderHighlight(text: string) {
 }
 
 /* ═══════════════════════════════════════════
-   SKILL BAR
-   ═══════════════════════════════════════════ */
-
-function SkillBar({ label, level, color, inView }: { label: string; level: number; color: string; inView: boolean }) {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <motion.div
-      className="group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="flex items-center justify-between mb-1.5">
-        <span
-          className="text-[13px] font-medium transition-colors duration-300"
-          style={{
-            fontFamily: 'var(--font-body)',
-            color: hovered ? '#fff' : 'rgba(255,255,255,0.6)',
-          }}
-        >
-          {label}
-        </span>
-        <span
-          className="text-[10px] tabular-nums"
-          style={{ fontFamily: 'var(--font-mono)', color: `${color}80` }}
-        >
-          {Math.round(level * 100)}%
-        </span>
-      </div>
-      <div
-        className="h-1.5 rounded-full overflow-hidden"
-        style={{ background: 'rgba(255,255,255,0.04)' }}
-      >
-        <motion.div
-          className="h-full rounded-full"
-          style={{
-            background: `linear-gradient(90deg, ${color}60, ${color})`,
-            boxShadow: hovered ? `0 0 12px ${color}50` : 'none',
-            width: '100%',
-            transformOrigin: 'left',
-          }}
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: level } : { scaleX: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-/* ═══════════════════════════════════════════
    GLASS CARD HELPER
    ═══════════════════════════════════════════ */
 
@@ -271,11 +191,12 @@ function GlassCard({
   children,
   className = '',
   style = {},
+  ...rest
 }: {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-}) {
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={`rounded-2xl ${className}`}
@@ -286,6 +207,7 @@ function GlassCard({
         border: '1px solid rgba(255, 255, 255, 0.06)',
         ...style,
       }}
+      {...rest}
     >
       {children}
     </div>
@@ -297,18 +219,15 @@ function GlassCard({
    ═══════════════════════════════════════════ */
 
 function SkillGroupCard({ group, index }: { group: typeof SKILL_GROUPS[number]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true });
-
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
       transition={{ delay: index * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
       <GlassCard className="p-5">
-        <div className="flex items-center gap-2 mb-5">
+        <div className="flex items-center gap-2 mb-4">
           <div
             className="w-2 h-2 rounded-full"
             style={{
@@ -326,15 +245,20 @@ function SkillGroupCard({ group, index }: { group: typeof SKILL_GROUPS[number]; 
             {group.category}
           </span>
         </div>
-        <div className="space-y-3.5">
+        <div className="flex flex-wrap gap-2">
           {group.skills.map((skill) => (
-            <SkillBar
-              key={skill.label}
-              label={skill.label}
-              level={skill.level}
-              color={group.color}
-              inView={inView}
-            />
+            <span
+              key={skill}
+              className="text-[12px] px-2.5 py-1 rounded-lg"
+              style={{
+                fontFamily: 'var(--font-mono)',
+                color: group.color,
+                background: `${group.color}12`,
+                border: `1px solid ${group.color}25`,
+              }}
+            >
+              {skill}
+            </span>
           ))}
         </div>
       </GlassCard>
@@ -625,9 +549,26 @@ export function ResumeCanvas() {
                     className="p-5 cursor-pointer group"
                     style={{
                       transition:
-                        'border-color 0.3s, box-shadow 0.3s',
+                        'border-color 0.3s, box-shadow 0.3s, background 0.3s',
+                      ...(isExpanded ? {
+                        borderColor: `${entry.color}40`,
+                        boxShadow: `0 0 24px ${entry.color}25, inset 0 1px 0 ${entry.color}15`,
+                        background: `${entry.color}0a`,
+                      } : {}),
                     }}
-                    // Inline hover via onMouseEnter/Leave to avoid complex Tailwind dynamic
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = `${entry.color}40`;
+                      el.style.boxShadow = `0 0 24px ${entry.color}25, inset 0 1px 0 ${entry.color}15`;
+                      el.style.background = `${entry.color}0a`;
+                    }}
+                    onMouseLeave={(e) => {
+                      if (isExpanded) return;
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+                      el.style.boxShadow = 'none';
+                      el.style.background = 'rgba(255, 255, 255, 0.025)';
+                    }}
                   >
                     <div
                       onClick={() =>

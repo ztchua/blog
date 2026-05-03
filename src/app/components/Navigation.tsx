@@ -39,17 +39,22 @@ export function Navigation({ activeSection, onSectionChange }: NavigationProps) 
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-      className="fixed top-5 left-1/2 -translate-x-1/2 z-50"
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+      className="sticky top-0 z-50"
+      style={{ marginTop: '-1px' }}
     >
+      <div
+        className="absolute -top-[200vh] left-0 right-0 bottom-0 -z-10"
+        style={{ background: '#0a0a19' }}
+      />
       <nav
-        className="relative flex items-center gap-1 px-2 py-2 rounded-2xl"
+        className="relative flex items-center justify-center gap-1 px-6 py-3"
         style={{
-          background: 'rgba(10, 10, 25, 0.65)',
+          background: 'rgba(10, 10, 25, 0.85)',
           backdropFilter: 'blur(24px) saturate(1.2)',
           WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
-          border: '1px solid rgba(255, 255, 255, 0.07)',
-          boxShadow: '0 8px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)',
         }}
       >
         {/* Logo mark */}
@@ -90,7 +95,7 @@ export function Navigation({ activeSection, onSectionChange }: NavigationProps) 
                 if (isDisabled) return;
                 onSectionChange(section.id);
               }}
-              className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl transition-colors duration-300"
+              className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300"
               style={{
                 color: isDisabled
                   ? 'rgba(255, 255, 255, 0.12)'
@@ -98,6 +103,19 @@ export function Navigation({ activeSection, onSectionChange }: NavigationProps) 
                     ? section.color
                     : 'rgba(255, 255, 255, 0.35)',
                 cursor: isDisabled ? 'not-allowed' : undefined,
+              }}
+              onMouseEnter={(e) => {
+                if (isDisabled) return;
+                if (!isActive) {
+                  e.currentTarget.style.background = section.gradient;
+                  e.currentTarget.style.color = section.color;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.35)';
+                }
               }}
             >
               {isActive && !isDisabled && (
@@ -110,8 +128,8 @@ export function Navigation({ activeSection, onSectionChange }: NavigationProps) 
                   }}
                   transition={{
                     type: 'spring',
-                    stiffness: 350,
-                    damping: 30,
+                    stiffness: 800,
+                    damping: 40,
                   }}
                 />
               )}
