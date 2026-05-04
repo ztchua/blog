@@ -18,7 +18,7 @@ const PROFILE = {
   handle: '@zhengtat',
   title: 'DevOps Engineer II',
   location: 'Singapore',
-  bio: 'DevOps engineer with 5 years of experience in software engineering, experienced in building and maintaining robust CI/CD and infrastructure. Proficient in cluster orchestration and observability stacks, is fluent with Linux system administration and L2/3 tech operations. Has a knack for troubleshooting and breaking down problems. Passionate about learning technologies to make a difference in everyday life — embraces the FOSS concept and is proficient in Japanese.',
+  bio: 'DevOps engineer with 5 years of experience in software engineering, experienced in building and maintaining robust CI/CD and infrastructure. Proficient in cluster orchestration and observability stacks, is fluent with Linux system administration and L2/3 tech operations. Has a knack for troubleshooting and breaking down problems. Passionate about learning technologies to make a difference in everyday life. He embraces the FOSS concept and talks about technologies as though it is major league gaming; is proficient in Japanese as well.',
   status: 'Open to opportunities',
   links: [
     { label: 'GitHub', href: 'https://github.com/ztchua', icon: 'gh' },
@@ -29,41 +29,56 @@ const PROFILE = {
 
 const SKILL_GROUPS = [
   {
-    category: 'Languages',
+    category: 'Programming Languages',
     color: '#00d4ff',
-    skills: ['HCL / Terraform', 'Golang', 'Python', 'Bash / Shell', 'Java', 'SQL'],
+    skills: ['HCL', 'Golang', 'Python', 'Java', 'Bash', 'Shell', 'SQL', 'Dart', 'LaTeX'],
   },
   {
-    category: 'Infrastructure',
+    category: 'Container & Orchestration',
     color: '#ffbe0b',
-    skills: ['Kubernetes', 'Docker', 'AWS', 'FluxCD / Helm', 'Terragrunt'],
+    skills: ['Kubernetes', 'Docker', 'FluxCD', 'Helm'],
   },
   {
-    category: 'Observability & Security',
+    category: 'Observability & Monitoring',
     color: '#8b5cf6',
-    skills: ['Elasticsearch / ELK', 'Grafana', 'SonarQube', 'Cosign / Connaisseur', 'Zabbix'],
+    skills: ['Elasticsearch', 'Grafana', 'Zabbix'],
   },
   {
-    category: 'CI/CD & GitOps',
+    category: 'Cloud & IAC',
+    color: '#00ff88',
+    skills: ['AWS', 'Terragrunt', 'Terraform'],
+  },
+  {
+    category: 'CI/CD',
     color: '#ff006e',
-    skills: ['GitLab CI/CD', 'GitHub Actions', 'GitOps / FluxCD', 'SAST / DAST / SCA'],
+    skills: ['GitLab', 'GitHub', 'Git'],
   },
   {
-    category: 'Frameworks & Tools',
+    category: 'Security',
+    color: '#ff4d6d',
+    skills: ['SonarQube', 'tfsec', 'Cosign', 'Connaisseur'],
+  },
+  {
+    category: 'Frameworks',
     color: '#3a86ff',
-    skills: ['Spring Boot', 'Flutter / Dart', 'Vim / Tmux', 'Proxmox'],
+    skills: ['Spring Boot', 'Flutter', 'Cucumber'],
+  },
+  {
+    category: 'Others',
+    color: '#ffbe0b',
+    skills: ['Draw.io', 'Visual Studio Code', 'Vim', 'Tmux', 'Proxmox', 'Wireguard'],
   },
 ];
 
 const TIMELINE = [
   {
-    year: '2023 — Present',
+    year: 'Jun 2023 — Present',
     title: 'DevOps Engineer (II)',
     company: 'Government Technology Agency',
     highlights: [
       'Designed **centralized CICD templates** and built **robust GitLab CI/CD pipelines** across multiple tracks, allowing the **autonomous configuration** of **parent-child / multi-project pipelines** while streamlining deployment processes',
-      'Enforced **security and quality** of existing repositories by employing tools such as **SAST**, **Dependency Scanning**, **DAST**, **Container Scanning** and **SCA via SonarQube**',
-      '**Redesigned roles and permissions** for existing GitLab groups and projects by **revamping paradigm** from project-based groups to **functional groups**',
+      'Championed product quality by enforcing **automated quality gates** — SAST, DAST, Dependency Scanning, Container Scanning, SCA — embedding quality assurance into the CI/CD pipeline',
+      'Identified workflow inefficiencies in GitLab repository access and **redesigned the permission model from project-based to functional groups**, improving cross-functional collaboration and operational clarity',
       'Enforced **container integrity** through the designing and use of **Cosign** for **image signing and verification**, and **Connaisseur** for **runtime verification** via **admission webhooks**',
       'Developed and managed **AWS cloud infrastructure** using **IAC**; writing custom **Terragrunt** modules to manage resources via declarative states',
       'Architected and implemented a **bespoke hub-and-spoke architecture** to cater for both internet and intranet services; across multiple **VPCs** using **Transit Gateways** with **ALBs** and **NLBs**, **R53** and **EKS Auto Mode**',
@@ -73,21 +88,23 @@ const TIMELINE = [
       'Orchestrate and manage workloads on **AWS EKS Fargate** while ensuring **high availability and minimal downtime** through the use of **HPAs**, **Pod Readiness Gates** and **Container Lifecycle Hooks**; and on **AWS EKS Auto Mode** using **Pod Disruption Budgets** and **Topology Spread Constraints**',
       '**Drove cross-functional DevOps excellence** by guiding engineers on CI/CD best practices and infrastructure knowledge, enabling cross-functional workflows and fostering DevOps maturity across tracks through **sharing sessions and documentation**',
       '**Lead, guide and mentor** other DevOps engineers on **designing, troubleshooting and writing quality code**',
-      'Developed utility scripts in **Golang** and **Bash** to automate operational tasks ranging from **internal compliance reporting**, **migration of Elasticsearch objects** to **automated creation of supporting Kubernetes resources**',
+      '**Built automation tooling and platforms** in Golang and Bash — from compliance reporting to automated resource provisioning — with the goal of 100% automation of repetitive operational tasks',
     ],
     color: '#ff006e',
     tags: ['Kubernetes', 'AWS', 'CI/CD', 'ELK Stack', 'FluxCD'],
   },
   {
-    year: '2021 — 2023',
+    year: 'Jun 2021 — Apr 2023',
     title: 'Associate Software Developer (I)',
     company: 'S&P Global',
     highlights: [
-      'Contributor in delivery team providing features and enhancements with comprehensive test suites using **Jmockit** and **Mockito** for existing **Spring Boot** application',
+      'Individual contributor within the delivery team in **releasing features and enhancements** on a multi-tenanted service for regulatory reporting',
+      '**Developed and maintained functional and integration test suites** using **JMockit** and **Mockito** for backend Spring Boot services, ensuring high-quality deliverables across release cycles',
+      'Built and enhanced E2E test automation frameworks using **Cucumber BDD, driving behavior-driven development** to reduce regression test cycles and improve test coverage and comprehensiveness',
       'Single-handedly architectured and implemented a decoupled **serverless** service in **Python** on **AWS** using services such as **Lambda**, **S3** and **SQS** to facilitate forwarding of financial trades',
-      'Implemented scripts and automations for internal operations in **Bash**, **Python** and **Golang** for development and daily operational support use cases, reducing **time spent by 75%**',
+      'Implemented scripts and automations for internal operations in **Bash**, **Python** and **Golang** for development, test automation and daily operational support use cases, reducing **time spent by 75%**',
       'Reconnaissance numerous P1/2 incidents and provided **in-depth troubleshooting**, **solutions** and **root cause analysis under time-critical deadlines** as part of the **support team as a L2/L3**',
-      'Developed and enhanced existing **GitLab CI/CD pipelines** to streamline delivery and deployment process, adopting a shift-left culture with SCA tools such as **Mend** and **SonarQube**',
+      'Advocated for quality in the development process by **shifting left with SCA tools** (Mend, SonarQube) integrated into CI/CD pipelines, identifying gaps in testing workflows and driving process improvements',
       'Authored **technical designs** and **documentations** for **Day 0 and Day 2 operations** for new and existing services',
       'Participated in **Agile** development cycles, acting as a rotational **Scrum Master** for development sprints',
       'Executed and planned major migration and exercises for clients with high data loads (**over 80 million records**)',
@@ -96,7 +113,7 @@ const TIMELINE = [
     tags: ['Spring Boot', 'Python', 'AWS Lambda', 'GitLab CI/CD'],
   },
   {
-    year: '2019 — 2021',
+    year: 'Jan 2019 — Jun 2021',
     title: 'BS in Computer Science, Big Data',
     company: 'University of Wollongong',
     highlights: [
@@ -111,6 +128,11 @@ const CERTIFICATIONS = [
   { label: 'AWS Solutions Architect', status: 'Certified', color: '#ffbe0b', detail: 'Associate — Jan 2023' },
   { label: 'Certified ScrumMaster', status: 'Certified', color: '#00ff88', detail: 'Scrum Alliance — Dec 2023' },
   { label: 'BS Computer Science, Big Data', status: 'Distinction', color: '#8b5cf6', detail: 'University of Wollongong — 2021' },
+];
+
+const PROJECTS = [
+  { name: 'ucd', href: 'https://github.com/ztchua/ucd', description: 'A chdir utility wrapper to supercharge and extend directory-related navigations', color: '#00d4ff' },
+  { name: 'StudyBuddy', href: 'https://github.com/ztcjoe93/studybuddy', description: 'An Anki-styled Flutter application with metrics for studying purposes', color: '#ff006e' },
 ];
 
 const STATS = [
@@ -692,6 +714,74 @@ export function ResumeCanvas() {
               );
             })}
           </div>
+        </div>
+      </motion.section>
+
+      {/* ─── PROJECTS ─── */}
+      <motion.section
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-80px' }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="mb-16"
+      >
+        <div className="flex items-center gap-3 mb-8" style={{ fontFamily: 'var(--font-mono)' }}>
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{
+              background: '#3a86ff',
+              boxShadow: '0 0 12px rgba(58,134,255,0.5)',
+            }}
+          />
+          <span
+            className="text-xs tracking-widest uppercase"
+            style={{ color: 'rgba(255,255,255,0.3)' }}
+          >
+            Projects
+          </span>
+        </div>
+
+        <div className="space-y-4">
+          {PROJECTS.map((project, i) => (
+            <motion.div
+              key={project.name}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08, duration: 0.4 }}
+            >
+              <GlassCard className="p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <span
+                      className="text-[14px] font-semibold block mb-1"
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        color: project.color,
+                      }}
+                    >
+                      {project.name}
+                    </span>
+                    <p
+                      className="text-[12px] leading-[1.65]"
+                      style={{ color: 'rgba(255,255,255,0.5)' }}
+                    >
+                      {project.description}
+                    </p>
+                  </div>
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0"
+                    style={{ color: 'rgba(255,255,255,0.3)' }}
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                </div>
+              </GlassCard>
+            </motion.div>
+          ))}
         </div>
       </motion.section>
 
