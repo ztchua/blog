@@ -21,9 +21,9 @@ const PROFILE = {
   bio: 'DevOps engineer with 5 years of experience in software engineering, experienced in building and maintaining robust CI/CD and infrastructure. Proficient in cluster orchestration and observability stacks, is fluent with Linux system administration and L2/3 tech operations. Has a knack for troubleshooting and breaking down problems. Passionate about learning technologies to make a difference in everyday life. He embraces the FOSS concept and talks about technologies as though it is major league gaming; is proficient in Japanese as well.',
   status: 'Open to opportunities',
   links: [
-    { label: 'GitHub', href: 'https://github.com/ztchua', icon: 'gh' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/in/zhengtat', icon: 'li' },
-    { label: 'Email', href: 'mailto:zhengtat@gmail.com', icon: 'tw' },
+    { label: 'GitHub', href: 'https://github.com/ztchua', icon: 'gh', dataId: 'github-redir' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/zhengtat', icon: 'li', dataId: 'linkedin-redir' },
+    { label: 'Email', href: 'mailto:zhengtat@gmail.com', icon: 'tw', dataId: 'email-redir' },
   ],
 };
 
@@ -396,6 +396,7 @@ export function ResumeCanvas() {
               {PROFILE.links.map((link) => (
                 <a
                   key={link.label}
+                  data-testid={link.dataId}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
